@@ -18,8 +18,16 @@ typedef struct printopts
     bool line;
 } printopts;
 
+typedef struct printvals
+{
+    size_t byte;
+    size_t character;
+    size_t word;
+    size_t line;
+} printvals;
+
 /* todo: m != c */
-static void wc (FILE* stream, size_t* lp, size_t* wp, size_t* mp, size_t* cp)
+static void wc (FILE* stream, printvals* pvals)
 {
     size_t l = 0, w = 0, m = 0, c = 0;
     int ch;
@@ -59,10 +67,12 @@ static void wc (FILE* stream, size_t* lp, size_t* wp, size_t* mp, size_t* cp)
         ++c;
     }
 
-    *lp = l;
-    *wp = w;
-    *mp = c;
-    *cp = c;
+    m = c;
+
+    pvals->line      = l;
+    pvals->word      = w;
+    pvals->character = m;
+    pvals->byte      = c;
 }
 
 static void printwc1 (const char* filepath, size_t* cols)
@@ -101,7 +111,7 @@ static void printwc3 (const char* filepath, size_t* cols)
     }
 }
 
-static void printwc (printopts* popts, const char* filepath, size_t l, size_t w, size_t m, size_t c)
+static void printwc (printopts* popts, const char* filepath, printvals* pvals)
 {
     int numdo = 0;
     size_t cols[3];
@@ -109,19 +119,19 @@ static void printwc (printopts* popts, const char* filepath, size_t l, size_t w,
 
     if (popts->line)
     {
-        cols[numdo++] = l;
+        cols[numdo++] = pvals->line;
     }
     if (popts->word)
     {
-        cols[numdo++] = w;
+        cols[numdo++] = pvals->word;
     }
     if (popts->character)
     {
-        cols[numdo++] = m;
+        cols[numdo++] = pvals->character;
     }
     if (popts->byte)
     {
-        cols[numdo++] = c;
+        cols[numdo++] = pvals->byte;
     }
 
     printwcfuncs[numdo](filepath, cols);
@@ -172,20 +182,25 @@ static void getprintopts (int argc, char* const *argv, printopts* popts)
 
 int main (int argc, char** argv)
 {
-    size_t totall = 0, totalw = 0, totalm = 0, totalc = 0;
-    size_t l, w, m, c;
-    size_t i;
-    char* filename;
+    printvals pvals_total;
+    printvals pvals;
     printopts popts;
+    char* filename;
     bool usestdin = false;
     FILE* strm;
+    int i;
 
     getprintopts(argc, argv, &popts);
 
+    pvals_total.line      = 0;
+    pvals_total.word      = 0;
+    pvals_total.character = 0;
+    pvals_total.byte      = 0;
+
     if (optind == argc)
     {
-        wc(stdin, &l, &w, &m, &c);
-        printwc(&popts, NULL, l, w, m, c);
+        wc(stdin, &pvals);
+        printwc(&popts, NULL, &pvals);
     }
     else
     {
@@ -196,24 +211,24 @@ int main (int argc, char** argv)
             usestdin = (filename[0] == '-') && (filename[1] == '\0');
             strm = usestdin ? stdin : fopen(filename, "r");
 
-            wc(strm, &l, &w, &m, &c);
+            wc(strm, &pvals);
 
             if (!usestdin)
             {
                 fclose(strm);
             }
 
-            totall += l;
-            totalw += w;
-            totalm += m;
-            totalc += c;
+            pvals_total.line      += pvals.line;
+            pvals_total.word      += pvals.word;
+            pvals_total.character += pvals.character;
+            pvals_total.byte      += pvals.byte;
 
-            printwc(&popts, filename, l, w, m, c);
+            printwc(&popts, filename, &pvals);
         }
 
         if ((argc - optind) > 1)
         {
-            printwc(&popts, "total", totall, totalw, totalm, totalc);
+            printwc(&popts, "total", &pvals_total);
         }
     }
 
