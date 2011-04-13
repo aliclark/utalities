@@ -1,33 +1,3 @@
-/*
-    wc [-c|-m] [-lw] [file...]
-
-DESCRIPTION
-
-    The wc utility shall read one or more input files and, by default, write the number of <newline> characters, words, and bytes contained in each input file to the standard output.
-
-        The utility also shall write a total count for all named files, if more than one input file is specified.
-
-    The wc utility shall consider a word to be a non-zero-length string of characters delimited by white space.
-
-OPTIONS
-
-    The wc utility shall conform to XBD Utility Syntax Guidelines .
-
-        The following options shall be supported:
-
-    -c
-        Write to the standard output the number of bytes in each input file.
-    -l
-        Write to the standard output the number of <newline> characters in each input file.
-    -m
-        Write to the standard output the number of characters in each input file.
-    -w
-        Write to the standard output the number of words in each input file.
-
-        When any option is specified, wc shall report only the information requested by the specified options.
-
-
-*/
 
 #include <stdlib.h>
 #include <stdio.h>
