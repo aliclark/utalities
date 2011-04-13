@@ -125,17 +125,15 @@ static void printwc (printopts* popts, const char* filepath, size_t l, size_t w,
     printwcfuncs[numdo](filepath, cols);
 }
 
-int main (int argc, char** argv)
+static void getprintopts (int argc, char* const *argv, printopts* popts)
 {
-    bool usedefault = true;
-    size_t totall = 0, totalw = 0, totalm = 0, totalc = 0;
-    size_t l, w, m, c;
     int arg;
-    size_t i;
-    char* filename;
-    printopts popts = { false, false, false, false };
-    bool usestdin = false;
-    FILE* strm;
+    bool usedefault = true;
+
+    popts->line = false;
+    popts->word = false;
+    popts->character = false;
+    popts->byte = false;
 
     while ((arg = getopt(argc, argv, "lwmc")) != -1)
     {
@@ -144,30 +142,43 @@ int main (int argc, char** argv)
         switch (arg)
         {
         case 'l':
-            popts.line = true;
+            popts->line = true;
             break;
         case 'w':
-            popts.word = true;
+            popts->word = true;
             break;
         case 'm':
-            popts.character = true;
+            popts->character = true;
             break;
         case 'c':
-            popts.byte = true;
+            popts->byte = true;
             break;
         }
     }
 
     if (usedefault)
     {
-        popts.line = true;
-        popts.word = true;
-        popts.byte = true;
+        popts->line = true;
+        popts->word = true;
+        popts->byte = true;
     }
-    else if (popts.character)
+    else if (popts->character)
     {
-        popts.byte = false;
+        popts->byte = false;
     }
+}
+
+int main (int argc, char** argv)
+{
+    size_t totall = 0, totalw = 0, totalm = 0, totalc = 0;
+    size_t l, w, m, c;
+    size_t i;
+    char* filename;
+    printopts popts;
+    bool usestdin = false;
+    FILE* strm;
+
+    getprintopts(argc, argv, &popts);
 
     if (optind == argc)
     {
