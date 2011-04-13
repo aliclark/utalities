@@ -142,10 +142,10 @@ static void getprintopts (int argc, char* const *argv, printopts* popts)
     int arg;
     bool usedefault = true;
 
-    popts->line = false;
-    popts->word = false;
+    popts->line      = false;
+    popts->word      = false;
     popts->character = false;
-    popts->byte = false;
+    popts->byte      = false;
 
     while ((arg = getopt(argc, argv, "lwmc")) != -1)
     {
