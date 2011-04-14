@@ -6,6 +6,8 @@
 #include "util.h"
 #include "io.h"
 
+#define FLAG_UNBUFFERED 0
+
 static void cat (char* filename, FILE* strm, void* data)
 {
     int tmp;
@@ -33,7 +35,7 @@ int main (int argc, char** argv)
 
     (void) input_flags(argc, argv, flagstr, flags);
 
-    if (flags[0] != NULL)
+    if (flags[FLAG_UNBUFFERED] != NULL)
     {
         setbuf(stdout, NULL);
     }
