@@ -35,7 +35,7 @@ int main (int argc, char** argv)
 
     if (flags[0] != NULL)
     {
-        setvbuf(stdout, NULL, _IONBF, 0);
+        setbuf(stdout, NULL);
     }
 
     input_files(argc, argv, cat, NULL);
