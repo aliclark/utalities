@@ -7,6 +7,8 @@
 #include "bool.h"
 #include "io.h"
 
+#define OPTION_N 0
+
 static int files_seen = 0;
 static bool multiple_mode = false;
 
@@ -61,9 +63,9 @@ int main (int argc, char** argv)
 
     (void) input_flags(argc, argv, flagstr, flags);
 
-    if (flags[0] != NULL)
+    if (flags[OPTION_N] != NULL)
     {
-        n = atoi(flags[0]);
+        n = atoi(flags[OPTION_N]);
 
         if (n <= 0)
         {
