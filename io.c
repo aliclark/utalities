@@ -44,7 +44,7 @@ char* read_line (void)
     }
 }
 
-void input_files (void (*func)(char*, FILE*, void*), int argc, char** argv, void* data)
+void input_files (int argc, char** argv, void (*func)(char*, FILE*, void*), void* data)
 {
     bool isstdin;
     FILE* strm;

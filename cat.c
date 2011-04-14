@@ -38,7 +38,7 @@ int main (int argc, char** argv)
         setvbuf(stdout, NULL, _IONBF, 0);
     }
 
-    input_files(cat, argc, argv, NULL);
+    input_files(argc, argv, cat, NULL);
 
     return EXIT_SUCCESS;
 }
