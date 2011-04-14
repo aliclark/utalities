@@ -1,4 +1,5 @@
 
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -188,7 +189,7 @@ int main (int argc, char** argv)
         {
             filename = argv[i];
 
-            usestdin = (filename[0] == '-') && (filename[1] == '\0');
+            usestdin = strcmp(filename, "-") == 0;
             strm = usestdin ? stdin : fopen(filename, "r");
 
             wc(strm, &pvals);
