@@ -24,12 +24,12 @@ static void head (char* filename, FILE* strm, void* data)
     {
         if (files_seen++ != 0)
         {
-            putchar('\n');
+            (void) putchar('\n');
         }
 
-        fputs("==> ",   stdout);
-        fputs(filename, stdout);
-        fputs(" <==\n", stdout);
+        (void) fputs("==> ",   stdout);
+        (void) fputs(filename, stdout);
+        (void) fputs(" <==\n", stdout);
     }
 
     while (true)
@@ -41,7 +41,7 @@ static void head (char* filename, FILE* strm, void* data)
             return;
         }
 
-        putchar(tmp);
+        (void) putchar(tmp);
 
         if (tmp == '\n')
         {
