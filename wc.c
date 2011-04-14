@@ -1,15 +1,30 @@
 
-#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <unistd.h>
 
 #include "bool.h"
-#include "wc.h"
+#include "io.h"
+
+#define FLAG_LINE      0
+#define FLAG_WORD      1
+#define FLAG_CHARACTER 2
+#define FLAG_BYTE      3
+
+typedef struct printvals
+{
+    size_t byte;
+    size_t character;
+    size_t word;
+    size_t line;
+} printvals;
+
+static const char* wc_flag_set = "true";
+static printvals pvals_total = { 0, 0, 0, 0 };
 
 /* todo: m != c */
-static void wc (FILE* stream, printvals* pvals)
+static void calcwc (FILE* stream, printvals* pvals)
 {
     size_t l = 0, w = 0, m = 0, c = 0;
     int ch;
@@ -55,6 +70,11 @@ static void wc (FILE* stream, printvals* pvals)
     pvals->word      = w;
     pvals->character = m;
     pvals->byte      = c;
+
+    pvals_total.line      += l;
+    pvals_total.word      += w;
+    pvals_total.character += m;
+    pvals_total.byte      += c;
 }
 
 static void printwc1 (const char* filepath, size_t* cols)
@@ -93,25 +113,25 @@ static void printwc3 (const char* filepath, size_t* cols)
     }
 }
 
-static void printwc (printopts* popts, const char* filepath, printvals* pvals)
+static void printwc (const char* filepath, const char** flags, printvals* pvals)
 {
     int numdo = 0;
     size_t cols[3];
     void (*printwcfuncs[])(const char*, size_t*) = { NULL, printwc1, printwc2, printwc3 };
 
-    if (popts->line)
+    if (flags[FLAG_LINE] != NULL)
     {
         cols[numdo++] = pvals->line;
     }
-    if (popts->word)
+    if (flags[FLAG_WORD] != NULL)
     {
         cols[numdo++] = pvals->word;
     }
-    if (popts->character)
+    if (flags[FLAG_CHARACTER] != NULL)
     {
         cols[numdo++] = pvals->character;
     }
-    if (popts->byte)
+    if (flags[FLAG_BYTE] != NULL)
     {
         cols[numdo++] = pvals->byte;
     }
@@ -119,99 +139,42 @@ static void printwc (printopts* popts, const char* filepath, printvals* pvals)
     printwcfuncs[numdo](filepath, cols);
 }
 
-static void getprintopts (int argc, char* const *argv, printopts* popts)
+static void wc (char* filename, FILE* strm, void* data)
 {
-    int arg;
-    bool usedefault = true;
+    const char** flags = (const char**) data;
+    printvals pvals;
 
-    popts->line      = false;
-    popts->word      = false;
-    popts->character = false;
-    popts->byte      = false;
-
-    while ((arg = getopt(argc, argv, "lwmc")) != -1)
-    {
-        usedefault = false;
-
-        switch (arg)
-        {
-        case 'l':
-            popts->line = true;
-            break;
-        case 'w':
-            popts->word = true;
-            break;
-        case 'm':
-            popts->character = true;
-            break;
-        case 'c':
-            popts->byte = true;
-            break;
-        }
-    }
-
-    if (usedefault)
-    {
-        popts->line = true;
-        popts->word = true;
-        popts->byte = true;
-    }
-    else if (popts->character)
-    {
-        popts->byte = false;
-    }
+    calcwc(strm, &pvals);
+    printwc(filename, flags, &pvals);
 }
 
 int main (int argc, char** argv)
 {
-    printvals pvals_total;
-    printvals pvals;
-    printopts popts;
-    char* filename;
-    bool usestdin = false;
-    FILE* strm;
-    int i;
+    const char* flags[4] = { NULL };
+    const char* flagstr = "lwmc";
 
-    getprintopts(argc, argv, &popts);
+    (void) input_flags(argc, argv, flagstr, flags);
 
-    pvals_total.line      = 0;
-    pvals_total.word      = 0;
-    pvals_total.character = 0;
-    pvals_total.byte      = 0;
-
-    if (optind == argc)
+    if (flags[FLAG_CHARACTER] != NULL)
     {
-        wc(stdin, &pvals);
-        printwc(&popts, NULL, &pvals);
+        flags[FLAG_BYTE] = NULL;
     }
-    else
+
+    if ((flags[FLAG_LINE]      == NULL) &&
+        (flags[FLAG_WORD]      == NULL) &&
+        (flags[FLAG_CHARACTER] == NULL) &&
+        (flags[FLAG_BYTE]      == NULL))
     {
-        for (i = optind; i < argc; ++i)
-        {
-            filename = argv[i];
+        flags[FLAG_LINE] = wc_flag_set;
+        flags[FLAG_WORD] = wc_flag_set;
+        flags[FLAG_BYTE] = wc_flag_set;
+    }
 
-            usestdin = strcmp(filename, "-") == 0;
-            strm = usestdin ? stdin : fopen(filename, "r");
+    input_files(argc, argv, wc, flags);
 
-            wc(strm, &pvals);
-
-            if (!usestdin)
-            {
-                fclose(strm);
-            }
-
-            pvals_total.line      += pvals.line;
-            pvals_total.word      += pvals.word;
-            pvals_total.character += pvals.character;
-            pvals_total.byte      += pvals.byte;
-
-            printwc(&popts, filename, &pvals);
-        }
-
-        if ((argc - optind) > 1)
-        {
-            printwc(&popts, "total", &pvals_total);
-        }
+    if ((optind + 1) < argc)
+    {
+        printwc("total", flags, &pvals_total);
     }
 
     return EXIT_SUCCESS;
