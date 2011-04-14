@@ -81,11 +81,11 @@ static void printwc1 (const char* filepath, size_t* cols)
 {
     if (filepath == NULL)
     {
-        printf("%d\n", cols[0]);
+        (void) printf("%d\n", cols[0]);
     }
     else
     {
-        printf("%d %s\n", cols[0], filepath);
+        (void) printf("%d %s\n", cols[0], filepath);
     }
 }
 
@@ -93,11 +93,11 @@ static void printwc2 (const char* filepath, size_t* cols)
 {
     if (filepath == NULL)
     {
-        printf("%d %d\n", cols[0], cols[1]);
+        (void) printf("%d %d\n", cols[0], cols[1]);
     }
     else
     {
-        printf("%d %d %s\n", cols[0], cols[1], filepath);
+        (void) printf("%d %d %s\n", cols[0], cols[1], filepath);
     }
 }
 
@@ -105,11 +105,11 @@ static void printwc3 (const char* filepath, size_t* cols)
 {
     if (filepath == NULL)
     {
-        printf("%d %d %d\n", cols[0], cols[1], cols[2]);
+        (void) printf("%d %d %d\n", cols[0], cols[1], cols[2]);
     }
     else
     {
-        printf("%d %d %d %s\n", cols[0], cols[1], cols[2], filepath);
+        (void) printf("%d %d %d %s\n", cols[0], cols[1], cols[2], filepath);
     }
 }
 

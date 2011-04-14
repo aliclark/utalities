@@ -8,15 +8,15 @@ int main (int argc, char** argv)
 
     if (i < argc)
     {
-        fputs(argv[i++], stdout);
+        (void) fputs(argv[i++], stdout);
     }
 
     for (; i < argc; ++i)
     {
-        putchar(' ');
-        fputs(argv[i], stdout);
+        (void) putchar(' ');
+        (void) fputs(argv[i], stdout);
     }
-    putchar('\n');
+    (void) putchar('\n');
 
     return EXIT_SUCCESS;
 }

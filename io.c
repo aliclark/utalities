@@ -63,7 +63,7 @@ void input_files (int argc, char** argv, void (*func)(char*, FILE*, void*), void
 
             if (strm == NULL)
             {
-                fputs(input_files_not_found, stderr);
+                (void) fputs(input_files_not_found, stderr);
             }
             else
             {
@@ -71,13 +71,14 @@ void input_files (int argc, char** argv, void (*func)(char*, FILE*, void*), void
 
                 if (isstdin)
                 {
-                    fclose(strm);
+                    (void) fclose(strm);
                 }
             }
         }
     }
 }
 
+/* fixme: ind should not be affected by ':' chars in optstring */
 int input_flags (int argc, char* const *argv, const char* optstring, const char ** flags)
 {
     const char* pos;

@@ -22,7 +22,7 @@ static void cat (char* filename, FILE* strm, void* data)
             return;
         }
 
-        putchar(tmp);
+        (void) putchar(tmp);
     }
 }
 
