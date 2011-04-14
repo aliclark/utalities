@@ -61,11 +61,18 @@ void input_files (int argc, char** argv, void (*func)(char*, FILE*, void*), void
             isstdin = strcmp(argv[i], "-") == 0;
             strm = isstdin ? stdin : fopen(argv[i], "r");
 
-            func(argv[i], strm, data);
-
-            if (isstdin)
+            if (strm == NULL)
             {
-                fclose(strm);
+                fputs(input_files_not_found, stderr);
+            }
+            else
+            {
+                func(argv[i], strm, data);
+
+                if (isstdin)
+                {
+                    fclose(strm);
+                }
             }
         }
     }
