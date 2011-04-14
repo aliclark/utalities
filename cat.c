@@ -1,7 +1,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 
 #include "bool.h"
 #include "util.h"
@@ -29,20 +28,12 @@ static void cat (char* filename, FILE* strm, void* data)
 
 int main (int argc, char** argv)
 {
-    bool immediate = false;
-    int arg;
+    const char* flags[1] = { NULL };
+    const char* flagstr = "u";
 
-    while ((arg = getopt(argc, argv, "u")) != -1)
-    {
-        switch (arg)
-        {
-        case 'u':
-            immediate = true;
-            break;
-        }
-    }
+    (void) input_flags(argc, argv, flagstr, flags);
 
-    if (immediate)
+    if (flags[0] != NULL)
     {
         setvbuf(stdout, NULL, _IONBF, 0);
     }

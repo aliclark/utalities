@@ -7,6 +7,9 @@
 #include "bool.h"
 #include "io.h"
 
+static const char* input_flags_found = "true";
+static const char* input_files_not_found = "file not found\n";
+
 /* Doesn't include the trailing \n . Must be free'd manually */
 char* read_line (void)
 {
@@ -66,4 +69,37 @@ void input_files (void (*func)(char*, FILE*, void*), int argc, char** argv, void
             }
         }
     }
+}
+
+int input_flags (int argc, char* const *argv, const char* optstring, const char ** flags)
+{
+    const char* pos;
+    int arg;
+    int ind;
+
+    while ((arg = getopt(argc, argv, optstring)) != -1)
+    {
+        if (arg == '?')
+        {
+            return 1;
+        }
+        if (arg == ':')
+        {
+            return 2;
+        }
+
+        pos = strchr(optstring, arg);
+        ind = pos - optstring;
+
+        if (pos[1] == ':')
+        {
+            flags[ind] = optarg;
+        }
+        else
+        {
+            flags[ind] = input_flags_found;
+        }
+    }
+
+    return 0;
 }
