@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "cat.h"
+#include "bool.h"
 
 static void cat (FILE* strm)
 {

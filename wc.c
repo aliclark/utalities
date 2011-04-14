@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <unistd.h>
 
+#include "bool.h"
 #include "wc.h"
 
 /* todo: m != c */

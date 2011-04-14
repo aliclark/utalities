@@ -1,9 +1,7 @@
 
-#ifndef __cplusplus
-typedef int bool;
-#define false 0
-#define true  1
-#endif
+#include <stdlib.h>
+
+#include "bool.h"
 
 typedef struct printopts
 {
