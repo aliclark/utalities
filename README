@@ -4,3 +4,21 @@ Implementations of various utilites defined in
 http://pubs.opengroup.org/onlinepubs/9699919799/idx/utilities.html
 
 These are not written for any particular purpose, just to help me learn more about C and Unix.
+
+
+Build:
+
+1)
+Ensure "redo" is installed (found here: https://github.com/apenwarr/redo )
+
+2)
+$ redo bin/all
+
+
+Usage:
+
+1)
+See LICENSE file for terms of usage.
+
+2)
+The utilities are in the bin directory, either use them directly, link them individually into your path or add the bin directory to your path.
