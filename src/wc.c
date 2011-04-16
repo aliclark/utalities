@@ -7,6 +7,12 @@
 #include "bool.h"
 #include "io.h"
 
+#ifdef TAB_SEPARATOR
+#define SEPARATOR "\t"
+#else
+#define SEPARATOR " "
+#endif
+
 #define FLAG_LINE      0
 #define FLAG_WORD      1
 #define FLAG_CHARACTER 2
@@ -85,7 +91,7 @@ static void printwc1 (const char* filepath, size_t* cols)
     }
     else
     {
-        (void) printf("%d %s\n", cols[0], filepath);
+        (void) printf("%d" SEPARATOR "%s\n", cols[0], filepath);
     }
 }
 
@@ -93,11 +99,11 @@ static void printwc2 (const char* filepath, size_t* cols)
 {
     if (filepath == NULL)
     {
-        (void) printf("%d %d\n", cols[0], cols[1]);
+        (void) printf("%d" SEPARATOR "%d\n", cols[0], cols[1]);
     }
     else
     {
-        (void) printf("%d %d %s\n", cols[0], cols[1], filepath);
+        (void) printf("%d" SEPARATOR "%d" SEPARATOR "%s\n", cols[0], cols[1], filepath);
     }
 }
 
@@ -105,11 +111,11 @@ static void printwc3 (const char* filepath, size_t* cols)
 {
     if (filepath == NULL)
     {
-        (void) printf("%d %d %d\n", cols[0], cols[1], cols[2]);
+        (void) printf("%d" SEPARATOR "%d" SEPARATOR "%d\n", cols[0], cols[1], cols[2]);
     }
     else
     {
-        (void) printf("%d %d %d %s\n", cols[0], cols[1], cols[2], filepath);
+        (void) printf("%d" SEPARATOR "%d" SEPARATOR "%d" SEPARATOR "%s\n", cols[0], cols[1], cols[2], filepath);
     }
 }
 
