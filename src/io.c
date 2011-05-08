@@ -13,7 +13,7 @@ static const char* input_flags_found = "true";
 static const char* input_files_error = "Unknown error";
 
 /* Doesn't include the trailing \n . Must be free'd manually */
-char* read_line (void)
+char* read_file_line (FILE* strm)
 {
     size_t i = 0;
     size_t len = 8;
@@ -28,7 +28,7 @@ char* read_line (void)
             rv = (char*) realloc(rv, len);
         }
 
-        tmp = getchar();
+        tmp = getc(strm);
 
         if ((tmp == EOF) && (i == 0))
         {
@@ -44,6 +44,11 @@ char* read_line (void)
 
         rv[i++] = tmp;
     }
+}
+
+char* read_line (void)
+{
+    return read_file_line(stdin);
 }
 
 void input_files (int argc, char** argv, void (*func)(char*, FILE*, void*), void* data)
